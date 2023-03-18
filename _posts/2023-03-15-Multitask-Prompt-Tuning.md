@@ -15,7 +15,7 @@ Recent interest emerges in parameter-efficient methods for model tuning  (Houlsb
 
 ### Visualizing the Problem
  
-We have a set of source tasks ***S*** = {*S*_1, *S*_2, ... , *S*_k} and a set of target tasks  ***T*** = {*T*_1, *T*_2, ... , *T*_k}.
+We have a set of source tasks ***S*** = ${S_{1}, S_{2}, ... , S_{k}}$ and a set of target tasks  ***T*** = {*T*_1, *T*_2, ... , *T*_k}.
 
 We want to learn a single shared prompt matrix that can perform well on target tasks. The general approach would be to learn a single shared prompt and finetune the prompt on each task in the target task set. This does not align with the initial idea of having a single prompt that can 
 	+ neither adapt to multiple target tasks in a parameter-efficient way 
