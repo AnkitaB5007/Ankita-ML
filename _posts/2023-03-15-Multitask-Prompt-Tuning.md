@@ -124,11 +124,7 @@ improvements over PT are 3.03% and 6.25% on E2E and WebNLG tasks respectively, s
 + Ablation w.r.t. decomposition and distillation
 To establish the importance of decomposition and distillation they carried out an ablation study on SUPERGLUE, which demonstrates that the shared component can effectively capture the rich cross-task knowledge that is beneficial for target downstream tasks.
 
-| ![](https://user-images.githubusercontent.com/39300414/226168009-16699c34-ab09-4bbc-b9a1-f4422bd61d33.JPG) |
-|:--:| 
-| *Figure 3. Ablation results on prompt decomposition and distillation* |
-
-
+{% include image.html url="/_images/Ablation1.jpg" description="Figure 3. Ablation results on prompt decomposition and distillation" %}
 
 
 
