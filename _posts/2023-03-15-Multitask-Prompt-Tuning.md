@@ -58,7 +58,7 @@ via. building a single prompt matrix
 In the previous approaches, soft prompts are individually learned per task using various approaches, particularly vanilla prompt tuning (see Vanilla prompt tuning). This phase of the process is called source training. In source training, we aggregate the prompts we learned from the set of source tasks. In the next phase, target adaptation, we adapt a prompt from the pool of aggregated pre-trained (on source tasks) prompts and initialize the prompt for further fine-tuning on a target task based on a (potentially learned) similarity measure.
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/39300414/226112617-20eb9806-b5b2-4555-9c1a-12829eba696d.png">
+  <img src="https://user-images.githubusercontent.com/39300414/226112617-20eb9806-b5b2-4555-9c1a-12829eba696d.png" alt>
   <em>
 	Figure 2.An illustration on prompt decomposition for two tasks.</em>
 </p>
