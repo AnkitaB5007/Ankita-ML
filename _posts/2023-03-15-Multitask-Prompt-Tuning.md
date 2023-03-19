@@ -4,33 +4,55 @@ date: 2023-03-15
 ---
 
 # How to learn a single prompt that can be used for multiple tasks efficiently
-### Introduction
+In this blog post, we will go over the ICLR 2023 paper titled MULTITASK PROMPT TUNING ENABLES PARAMETER-EFFICIENT TRANSFER LEARNING. Recently, I was reading few articles about **"Prompt tuning"** where the idea of having a compact model that can fit to any target downstream tasks, seemed quite interesting. This paper cannot stand alone without the contribution of two key works published previously, (Houlsby et al., 2019, Vu et al., 2021).
 
-Finetuning pretrained language models (PLMs) has led to significant improvements across various downstream NLP tasks (Devlin et al., 2019; Howard & Ruder, 2018; Raffel et al., 2020).
+**Goal of this blog post**: The main goal with this blog post is to provide a foundation for 
+1. Parameter efficient Prompt tuning utilizing Transfer Learning capabilities 
+2. Soft prompt transfer 
+3. How similarity between various tasks can benefit in prompt design 
+4. **Multitask Prompt tuning** : Having a nice compact prompt matrix(few tunable parameters to worry about) to adapt to any target task.
+
+Outline of this Blog Post
 
 
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/39300414/226167799-474a8975-c4f3-4830-82ec-4006e8511868.JPG" alt="***Figure 1*** Parameter efficiency on GLUE and SUPERGLUE tasks"/>
+### Idea Behind Compact Models
+We don't want to train the entire model (billions of parameters) for every new task(Model tuning). This brings us to the idea of having compact and extensible downstream models.  Compact models are those that solve many tasks using a small number of additional parameters per task. Extensible models can be trained incrementally to solve new tasks, without forgetting previous ones. This can be acheived via **Transfer learning** strategies like : 
+1. Feature-based : Feed the custom downstream models with task pre-trained real valued embedding vectors (word/sentence/paragraph level)
+2. Finetuning : Usually, better than the previous one. Simply copy the weights from a pre-trained model and train them on a downstream task. Vanilla fine-tuning does require a new set of network weights for every new task. 
+      + Prompt Tuning freezes the PLM parameters and only learns a small  set of task-specific prompt vectors.
+     + Very sensitive to initialization
+     + Can take very long time
+
+
+### How do we make Transfer learning parameter-efficient?
+In case of Finetuning, one way could be to share parameters in the lower layers and tune the higher layers as per the target task. We do not wish to touch the model parameters(i.e. freeze them) and only try to optimise the task-specific parameters(Prompt tuning) so that we can be parameter-efficient. Adapter tuning strategy(Houlsby et al., 2019) tries to do the same by injecting new layers into the original network. The weights of the original network are untouched, whilst the new adapter layers are initialized at random. Another benefit of using adapter modules is that you do not need simultaneous access to the source tasks(in case of Multitask prompt tuning). 
+
+Another way is to learn optimisable prompts, also called soft because they are indeed '*soft*' as they come from the model's vocabulary but over the process they change their form by gradient descent. These soft prompts can be transferred to fit any kind of target task.
+
+### Soft Prompts: How do we learn them and transfer them?
+I throughly enjoyed reading the paper **SPoT**(Vu et al., 2021) which talks about soft prompt transfer. They basically, learn a prompt on one or more source tasks and then use it to initialize the prompt for a target task(remember, base model is frozen). The following figure gives an excellent overview of their approach:
+<p align= 'center'>
+    <img src="https://user-images.githubusercontent.com/39300414/226206791-83283787-10b8-4ad6-a04a-6692c821159c.JPG" alt>
+    <em>Figure 1: An illustration of our task-agnostic (left) and task-specific (right) SPOT approaches. Left: We learn a
+	single prompt on one or more source tasks, which is then used to initialize the prompt for each target task. Right:
+	We learn prompts for source tasks, and save early checkpoints as task embeddings and best checkpoints as source
+	prompts. These form the keys and values of our prompt library. Given a novel target task, a user: (i) computes a
+	task embedding, (ii) retrieves an optimal source prompt, and (iii) trains a target prompt, which is initialized with
+	the source prompt.</em>
 </p>
+They treated task prompts as "*task embeddings*" to construct a semantic space of tasks and formalize the similarity between tasks. The best part of this paper was that they investigated extensively about "*Task Transferability*" (26 NLP tasks and 160 combinations of source-target tasks) based on "Task similarity" (cosine similarity) which helps to identify which set of source tasks are likely to yield positive results on a novel target task.
 
-### Problems:
-+ Conventional paradigm of full task-specific fine-tuning(FT); difficult to scale to multiple task
-+ PLMs have billions of parameters 
-Recent interest emerges in parameter-efficient methods for model tuning  (Houlsby et al., 2019; Lester et al., 2021; Ding et al., 2022), where the goal is to learn only a small number of additional parameters per task while achieving performance comparable to full finetuning.
 
 ### Visualizing the Problem
- 
-We have a set of source tasks  $\mathbf{\textit{S}} = {S_{1}, S_{2}, ... , S_{k}}$ and a set of target tasks  $\textit{T} = {T_{1}, T_{2}, ... , T_{k}}$.
 
-We want to learn a single shared prompt matrix that can perform well on target tasks. The general approach would be to learn a single shared prompt and finetune the prompt on each task in the target task set. This does not align with the initial idea of having a single prompt that can 
-	+ neither adapt to multiple target tasks in a parameter-efficient way 
-	+ nor learns anything about the similarities between source tasks. 
+Up until this, the road has been set for the IBM researchers, as earlier papers have extensively tried parameter-efficient approaches. We have a set of source tasks  $\mathbf{\textit{S}} = {S_{1}, S_{2}, ... , S_{k}}$ and a set of target tasks  $\textit{T} = {T_{1}, T_{2}, ... , T_{k}}$.
+Now, they want to tackle the **Multitask challenge**, by killing two birds with a stone. They are going to implement 
++ Task transferability(Vu et al., 2021)
++ Compact model/prompt matrix by Knowledge distillation
 
-
-### Approaches:
-+ Prompt tuning (PT), which prepends tunable continuous prompt vectors to the input, has emerged as a promising approach for parameter-efficient transfer learning with PLMs (Liu et al., 2021a; Li & Liang, 2021; Lester et al., 2021; Liu et al., 2022b; 2021b). 
-+ PT freezes the PLM parameters and only learns a small set of task-specific prompt vectors.
-+ However, despite their impressive performance, there is still a large gap between prompt tuning and full finetuning (Lester et al., 2021). Additionally, this approach is sensitive to initialization and often requires more training time than finetuning (Su et al., 2022; Zhong et al., 2022).
+via. building a single prompt matrix
++ commonalities between source tasks
++ specialities of a given task
 
 ### Current Approach- Dubbed MPT
 In the previous approaches, soft prompts are individually learned per task using various approaches, particularly vanilla prompt tuning (see Vanilla prompt tuning). This phase of the process is called source training. In source training, we aggregate the prompts we learned from the set of source tasks. In the next phase, target adaptation, we adapt a prompt from the pool of aggregated pre-trained (on source tasks) prompts and initialize the prompt for further fine-tuning on a target task based on a (potentially learned) similarity measure.
