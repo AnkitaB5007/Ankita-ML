@@ -58,7 +58,8 @@ via. building a single prompt matrix
 In the previous approaches, soft prompts are individually learned per task using various approaches, particularly vanilla prompt tuning (see Vanilla prompt tuning). This phase of the process is called source training. In source training, we aggregate the prompts we learned from the set of source tasks. In the next phase, target adaptation, we adapt a prompt from the pool of aggregated pre-trained (on source tasks) prompts and initialize the prompt for further fine-tuning on a target task based on a (potentially learned) similarity measure.
 
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/39300414/226112617-20eb9806-b5b2-4555-9c1a-12829eba696d.png" alt="***Figure 2***.An illustration on prompt decomposition for two tasks."/>
+  <img src="https://user-images.githubusercontent.com/39300414/226112617-20eb9806-b5b2-4555-9c1a-12829eba696d.png">
+  <em>"Figure 2.An illustration on prompt decomposition for two tasks."</em>
 </p>
 
 In the dubbed version of Multitask prompt tuning (MPT), we follow the same strategy of Source training and target adaptation with a slight twist. It seems that simply sharing the aggregated soft prompts in the Vanilla version did not fit the target task so well and resulted in a gap in the performance of the PLM w.r.t Source and Target tasks. 
@@ -122,7 +123,8 @@ improvements over PT are 3.03% and 6.25% on E2E and WebNLG tasks respectively, s
 + Ablation w.r.t. decomposition and distillation
 To establish the importance of decomposition and distillation they carried out an ablation study on SUPERGLUE, which demonstrates that the shared component can effectively capture the rich cross-task knowledge that is beneficial for target downstream tasks.
 <p align="center">
-  <img src="https://user-images.githubusercontent.com/39300414/226168009-16699c34-ab09-4bbc-b9a1-f4422bd61d33.JPG" alt="Ablation 1"/>
+  <img src="https://user-images.githubusercontent.com/39300414/226168009-16699c34-ab09-4bbc-b9a1-f4422bd61d33.JPG">
+  <em>"Figure 3. Ablation results on prompt decomposition and distillation</em>
 </p>
 
 
