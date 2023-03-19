@@ -123,10 +123,10 @@ They conduct a series of experiments to test whether prompt decomposition learne
 improvements over PT are 3.03% and 6.25% on E2E and WebNLG tasks respectively, showing the effectiveness of our approach on both NLU (e.g., classification, NLI, QA tasks) and NLG tasks.
 + Ablation w.r.t. decomposition and distillation
 To establish the importance of decomposition and distillation they carried out an ablation study on SUPERGLUE, which demonstrates that the shared component can effectively capture the rich cross-task knowledge that is beneficial for target downstream tasks.
-<p align="center">
-  <img src="https://user-images.githubusercontent.com/39300414/226168009-16699c34-ab09-4bbc-b9a1-f4422bd61d33.JPG">
-  <em>Figure 3. Ablation results on prompt decomposition and distillation</em>
-</p>
+
+| ![](https://user-images.githubusercontent.com/39300414/226168009-16699c34-ab09-4bbc-b9a1-f4422bd61d33.JPG) | 
+|:--:| 
+| *Figure 3. Ablation results on prompt decomposition and distillation* |
 
 
 
