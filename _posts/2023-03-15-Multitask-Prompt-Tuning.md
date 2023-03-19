@@ -8,6 +8,11 @@ date: 2023-03-15
 
 Finetuning pretrained language models (PLMs) has led to significant improvements across various downstream NLP tasks (Devlin et al., 2019; Howard & Ruder, 2018; Raffel et al., 2020).
 
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/39300414/226167799-474a8975-c4f3-4830-82ec-4006e8511868.JPG" alt="***Figure 1*** Parameter efficiency on GLUE and SUPERGLUE tasks"/>
+</p>
+
 ### Problems:
 + Conventional paradigm of full task-specific fine-tuning(FT); difficult to scale to multiple task
 + PLMs have billions of parameters 
@@ -51,4 +56,54 @@ for *k*-th source task is then parameterized as:
 General information across the set of source tasks ***S*** can be captured by “slow” weights $P^{*}$ shared across tasks, while the “fast” weights $W_{k}$ could then encode task-specific knowledge for $S_{k}$ in a low-rank subspace.
 
 #### Losses
+The first loss equation, basically aims to minimize the KL divergence between shared prompt matrix $P^{\ast}$ and task-specific parameters $u_{k}$ and  $v_{k}$
+
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/39300414/226167093-22eb97b8-ffc6-4e4e-8017-8c29b8d78db2.JPG" alt="Equation 3"/>
+</p>
+
+This tries to bring the output probability distributions of the teachers and student prompts closer to each other. The next distillation loss, is computed by mean squared loss between teacher and student networks hidden states.
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/39300414/226167119-3685ff27-6c8c-4672-9485-1b3c74c2d31f.JPG" alt="Equation 4"/>
+</p>
+
+And finally, the total loss is computed as following,
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/39300414/226167151-eba04322-e0f9-486d-ac71-d5743b7d1972.JPG" alt="Equation 4"/>
+</p>
+
 #### Target Adaptation
+Now that we have learnt the shared common prompt matrix $P^{\ast}$ we can now initialize the target prompt for task $T_{t}$ to be as follows:
+$\widehat{P_t} = P^{\ast} \circ (u_{k} \otimes v_{k}^{T})$
+and optimize with the regular task loss as $L_{PLM} = - \sum_{i}^{}log P(y_{i}|x_{i} ; \theta , \mathbf{P} )$
+
+##### Baselines 
+MPT was compared against the following baselines: (1) Full finetuning (FT), where all the model parameters are tuned during adaptation on each downstream task. (2) Vanilla prompt tuning (PT) (Lester et al., 2021), where target prompt vectors are initialized by randomly sampled top vocabularies. (3) Existing prompt transfer methods, including SPoT (Vu et al., 2022) and ATTEMPT (Asai et al., 2022), which initialize target prompts by retrieving or aggregating source prompts. (4) Popular parameter-efficient methods including Adapters (Houlsby et al., 2019) and
+BitFit (Zaken et al., 2022).
+
+**Implementation details** : For source training part, MPT was trained on a mixture of tasks. For target adaptation part, they reused the shared prompt matrix and take average of the *source* task specific vectors to initialize the target specific vector.
+
+#### Results and Discussion
++ Parameter efficient : The total number of tunable parameters for a single target task is $(l × d) + (l + d)$. After training, this can further be compressed into a single matrix of size $l × d^{2}$.
+
+
+MPT was judged on four benchmarks and evaluated on each task following the baselines.
++ MPT establishes new state-of-the-art results for parameter-efficient finetuning on both GLUE and SuperGLUE
++ If we talk about parameter efficient, ADAPTERS is the most competetive and accurate of them all. But,  MPT is far more parameter efficient and requires 4× fewer
+task-specific parameters. Not just that, MPT also beats full-finetuning on GLUE and SUPERGLUE despite using just 0.035% as many task-specific parameters.
++ There is significant gap in full finetuning and MPT on the MRQA benchmark, which brings us to question the accuracy of MPT in this direction.
++ Few-shot adaptation : MPT can effectively use cross-task
+knowledge in source tasks to target tasks where there are only a few labeled examples.
++ *Can MPT transfer knowledge from NLU task to NLG task?*
+They conduct a series of experiments to test whether prompt decomposition learned from source NLU tasks can generalize to target NLG task. The T5-LARGE prompt trained by six diverse source NLU tasks was tested on two NLG tasks, E2E (Novikova et al., 2017) and WebNLG (Gardent et al., 2017).  BLEU
+improvements over PT are 3.03% and 6.25% on E2E and WebNLG tasks respectively, showing the effectiveness of our approach on both NLU (e.g., classification, NLI, QA tasks) and NLG tasks.
++ Ablation w.r.t. decomposition and distillation
+To establish the importance of decomposition and distillation they carried out an ablation study on SUPERGLUE, which demonstrates that the shared component can effectively capture the rich cross-task knowledge that is beneficial for target downstream tasks.
+<p align="center">
+  <img src="https://user-images.githubusercontent.com/39300414/226168009-16699c34-ab09-4bbc-b9a1-f4422bd61d33.JPG" alt="Ablation 1"/>
+</p>
+
+
+
+
+
