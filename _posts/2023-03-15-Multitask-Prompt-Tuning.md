@@ -58,11 +58,10 @@ via. building a single prompt matrix
 In the previous approaches, soft prompts are individually learned per task using various approaches, particularly vanilla prompt tuning (see Vanilla prompt tuning). This phase of the process is called source training. In source training, we aggregate the prompts we learned from the set of source tasks. In the next phase, target adaptation, we adapt a prompt from the pool of aggregated pre-trained (on source tasks) prompts and initialize the prompt for further fine-tuning on a target task based on a (potentially learned) similarity measure.
 
 
-<p align="center"><img src=https://user-images.githubusercontent.com/39300414/226112617-20eb9806-b5b2-4555-9c1a-12829eba696d.png><p align="center">
-<p align="center">Figure 2.An illustration on prompt decomposition for two tasks.<p align="center">
+<p align="center"><img src=https://user-images.githubusercontent.com/39300414/226112617-20eb9806-b5b2-4555-9c1a-12829eba696d.png></p>
+<p align="center">Figure 2.An illustration on prompt decomposition for two tasks.</p>
 
-In the dubbed version of Multitask prompt tuning (MPT), we follow the same strategy of Source training and target adaptation with a slight twist. It seems that simply sharing the aggregated soft prompts in the Vanilla version did not fit the target task so well and resulted in a gap in the performance of the PLM w.r.t Source and Target tasks. 
-
+In the dubbed version of Multitask prompt tuning (MPT), we follow the same strategy of Source training and target adaptation with a slight twist. It seems that simply sharing the aggregated soft prompts in the Vanilla version did not fit the target task so well and resulted in a gap in the performance of the PLM w.r.t Source and Target tasks.
 ## Source Training
 The primary goal of the authors was to design a single shared prompt matrix $\widehat{P^*}$ that could easily adapt to the nature of the target tasks. They try to model this single prompt matrix as a combination of two superpowers. First one, it should carry all the common flavors from the source tasks (RTE, QA, Text summarization, etc.), and second, it should be good at a specific task(say, for a QA task). How do they learn this single shared prompt matrix, is the "**big question**"?
 Well, they literally "*learn*" this prompt from a very popular and common concept in Machine Learning which is *Knowledge Distillation*. If we are talking about KD, we must have Teachers and Students! 
@@ -102,7 +101,7 @@ $\widehat{P_t} = P^{\ast} \circ (u_{k} \otimes v_{k}^{T})$
 and optimize with the regular task loss as $L_{PLM} = - \sum_{i}^{}log P(y_{i}|x_{i} ; \theta , \mathbf{P} )$
 
 ### Baselines 
-MPT was compared against the following baselines: (1) Full finetuning (FT), where all the model parameters are tuned during adaptation on each downstream task. (2) Vanilla prompt tuning (PT) (Lester et al., [2021](https://arxiv.org/abs/2104.08691)), where target prompt vectors are initialized by randomly sampled top vocabularies. (3) Existing prompt transfer methods, including SPoT (Vu et al., [2022](https://arxiv.org/abs/2110.07904v1)) and ATTEMPT (Asai et al., [2022](https://arxiv.org/abs/2205.11961)), which initialize target prompts by retrieving or aggregating source prompts. (4) Popular parameter-efficient methods including Adapters (Houlsby et al., [2019](https://arxiv.org/abs/1902.00751)) and
+MPT was compared against the following baselines: (1) Full finetuning (FT), where all the model parameters are tuned during adaptation on each downstream task. (2) Vanilla prompt tuning (PT) (Lester et al., [2021](https://arxiv.org/abs/2104.08691)), where target prompt vectors are initialized by randomly sampled top vocabularies. (3) Existing prompt transfer methods, including SPoT(Vu et al., [2022](https://arxiv.org/abs/2110.07904v1)) and ATTEMPT(Asai et al., [2022](https://arxiv.org/abs/2205.11961)), which initialize target prompts by retrieving or aggregating source prompts. (4) Popular parameter-efficient methods including Adapters (Houlsby et al., [2019](https://arxiv.org/abs/1902.00751)) and
 BitFit (Zaken et al., [2022](https://arxiv.org/abs/2106.10199)).
 
 **Implementation details** : For source training part, MPT was trained on a mixture of tasks. For target adaptation part, they reused the shared prompt matrix and take average of the *source* task specific vectors to initialize the target specific vector.
@@ -126,8 +125,7 @@ To establish the importance of decomposition and distillation they carried out a
 <p align="center"><img src=https://user-images.githubusercontent.com/39300414/226212894-2212cb09-b18f-4f09-bcd8-3d91f868bc59.JPG></p>
 <p align="center">Figure 3. Ablation results on prompt decomposition and distillation.</p>
 
-## Concluding remarks
+### Concluding remarks
 In this blog, we discuss various parameter-efficient transfer learning techniques that can adapt to downstream target tasks. We saw the use of Task transferability, knowledge distillation, Prompt decomposition and what not. Everything, to squeeze out the performance of large models without taking a toll on the memory and the wallet. Soon, we will expect prompt learning on the fly, tackle new, unseen tasks and solve them without forgetting the old ones. The field of Continual learning is soon charging up to deal all of these issues. One of the biggies at the IBM, David Cox, head of Exploratory AI Research and co-director of the MIT-IBM Watson AI Lab says,
 >“Prompt-tuning allows you to have your cake and eat it, too!. You can adapt your model to specialized tasks faster and more sustainably, while making it easier to find and fix problems.”
 
-## References
