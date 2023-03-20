@@ -4,7 +4,7 @@ date: 2023-03-15
 ---
 
 # How to learn a single prompt that can be used for multiple tasks efficiently
-In this blog post, we will go over the ICLR 2023 paper titled MULTITASK PROMPT TUNING ENABLES PARAMETER-EFFICIENT TRANSFER LEARNING. Recently, I was reading few articles about **"Prompt tuning"** where the idea of having a compact model that can fit to any target downstream tasks, seemed quite interesting. This paper cannot stand alone without the contribution of two key works published previously, (Houlsby et al., 2019, Vu et al., 2021).
+In this blog post, we will go over the ICLR 2023 paper titled MULTITASK PROMPT TUNING ENABLES PARAMETER-EFFICIENT TRANSFER LEARNING. Recently, I was reading few articles about **"Prompt tuning"** where the idea of having a compact model that can fit to any target downstream tasks, seemed quite interesting. This paper cannot stand alone without the contribution of two key works published previously, (Houlsby et al., [2019](https://arxiv.org/abs/1902.00751), Vu et al., [2021](https://arxiv.org/abs/2110.07904v1)).
 
 **Goal of this blog post**: The main goal with this blog post is to provide a foundation for 
 1. Parameter efficient Prompt tuning utilizing Transfer Learning capabilities 
@@ -30,7 +30,7 @@ In case of Finetuning, one way could be to share parameters in the lower layers 
 Another way is to learn optimisable prompts, also called soft because they are indeed '*soft*' as they come from the model's vocabulary but over the process they change their form by gradient descent. These soft prompts can be transferred to fit any kind of target task.
 
 ## Soft Prompts: How do we learn them and transfer them?
-I throughly enjoyed reading the paper **SPoT**(Vu et al., 2021) which talks about soft prompt transfer. They basically, learn a prompt on one or more source tasks and then use it to initialize the prompt for a target task(remember, base model is frozen). The following figure gives an excellent overview of their approach:
+I throughly enjoyed reading the paper **SPoT**(Vu et al., [2021](https://arxiv.org/abs/2110.07904v1)) which talks about soft prompt transfer. They basically, learn a prompt on one or more source tasks and then use it to initialize the prompt for a target task(remember, base model is frozen). The following figure gives an excellent overview of their approach:
 <p align= 'center'>
     <img src="https://user-images.githubusercontent.com/39300414/226206791-83283787-10b8-4ad6-a04a-6692c821159c.JPG" alt>
     <em>Figure 1: An illustration of our task-agnostic (left) and task-specific (right) SPOT approaches. Left: We learn a
@@ -102,8 +102,8 @@ $\widehat{P_t} = P^{\ast} \circ (u_{k} \otimes v_{k}^{T})$
 and optimize with the regular task loss as $L_{PLM} = - \sum_{i}^{}log P(y_{i}|x_{i} ; \theta , \mathbf{P} )$
 
 ### Baselines 
-MPT was compared against the following baselines: (1) Full finetuning (FT), where all the model parameters are tuned during adaptation on each downstream task. (2) Vanilla prompt tuning (PT) (Lester et al., 2021), where target prompt vectors are initialized by randomly sampled top vocabularies. (3) Existing prompt transfer methods, including SPoT (Vu et al., 2022) and ATTEMPT (Asai et al., 2022), which initialize target prompts by retrieving or aggregating source prompts. (4) Popular parameter-efficient methods including Adapters (Houlsby et al., 2019) and
-BitFit (Zaken et al., 2022).
+MPT was compared against the following baselines: (1) Full finetuning (FT), where all the model parameters are tuned during adaptation on each downstream task. (2) Vanilla prompt tuning (PT) (Lester et al., [2021](https://arxiv.org/abs/2104.08691)), where target prompt vectors are initialized by randomly sampled top vocabularies. (3) Existing prompt transfer methods, including SPoT (Vu et al., [2022](https://arxiv.org/abs/2110.07904v1)) and ATTEMPT (Asai et al., [2022](https://arxiv.org/abs/2205.11961)), which initialize target prompts by retrieving or aggregating source prompts. (4) Popular parameter-efficient methods including Adapters (Houlsby et al., [2019](https://arxiv.org/abs/1902.00751)) and
+BitFit (Zaken et al., [2022](https://arxiv.org/abs/2106.10199)).
 
 **Implementation details** : For source training part, MPT was trained on a mixture of tasks. For target adaptation part, they reused the shared prompt matrix and take average of the *source* task specific vectors to initialize the target specific vector.
 
