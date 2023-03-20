@@ -127,6 +127,13 @@ MPT was judged on four benchmarks and evaluated on each task following the basel
 + MPT establishes new state-of-the-art results for parameter-efficient finetuning on both GLUE and SuperGLUE
 + If we talk about **parameter efficient**, ADAPTERS is the most competitive and accurate of them all. But,  MPT is far more parameter efficient and requires 4× fewer
 task-specific parameters. Not just that, MPT also beats full-finetuning on GLUE and SUPERGLUE despite using just 0.035% as many task-specific parameters.
+<p align="center">
+ <img src="https://user-images.githubusercontent.com/39300414/226303450-bfd996c4-4554-48b9-aa79-96e277531a3f.JPG" alt="Parameter_eff"/>
+    <br>
+    <em>Figure 3. Parameter efficiency on GLUE (left) and SuperGLUE (right). Our multitask prompt tuning (MPT)
+	approach, which transfers a single shared prompt learned from multiple source tasks using prompt decomposition and distillation, maintains high accuracy (y-axis) while finetuning only a small number of parameters per
+task (x-axis). </em>
+</p>
 + There is significant gap in full finetuning and MPT on the MRQA benchmark, which brings us to question the accuracy of MPT in this direction.
 + **Few-shot adaptation** : MPT can effectively use cross-task
 knowledge in source tasks to target tasks where there are only a few labeled examples.
@@ -138,7 +145,7 @@ To establish the importance of decomposition and distillation they carried out a
 <p align="center">
  <img src="https://user-images.githubusercontent.com/39300414/226212894-2212cb09-b18f-4f09-bcd8-3d91f868bc59.JPG" alt="Ablation1"/>
     <br>
-    <em>Figure 3. Ablation results on prompt decomposition and distillation.</em>
+    <em>Figure 4. Ablation results on prompt decomposition and distillation.</em>
 </p>
 
 ## Concluding remarks
