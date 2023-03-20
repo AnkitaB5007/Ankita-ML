@@ -59,7 +59,8 @@ In the previous approaches, soft prompts are individually learned per task using
 
 <p align= 'center'>
     <img src="https://user-images.githubusercontent.com/39300414/226228137-f88ba00b-b1c2-4222-a6cf-399291cef7db.png" alt>
-    <em>Figure 2. An illustration on prompt decomposition for two tasks.</em>
+    <em>
+	 Figure 2. An illustration on prompt decomposition for two tasks.</em>
 </p>
 
 In the dubbed version of Multitask prompt tuning (MPT), we follow the same strategy of Source training and target adaptation with a slight twist. It seems that simply sharing the aggregated soft prompts in the Vanilla version did not fit the target task so well and resulted in a gap in the performance of the PLM w.r.t Source and Target tasks.
