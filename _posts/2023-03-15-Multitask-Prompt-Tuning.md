@@ -12,8 +12,19 @@ In this blog post, we will go over the ICLR 2023 paper titled MULTITASK PROMPT T
 3. How similarity between various tasks can benefit in prompt design 
 4. **Multitask Prompt tuning** : Having a nice compact prompt matrix(few tunable parameters to worry about) to adapt to any target task.
 
-Outline of this Blog Post
-
+## Outline of this Blog Post
+- [How to learn a single prompt that can be used for multiple tasks efficiently](#how-to-learn-a-single-prompt-that-can-be-used-for-multiple-tasks-efficiently)
+  - [Idea Behind Compact Models](#idea-behind-compact-models)
+  - [How do we make Transfer learning parameter-efficient?](#how-do-we-make-transfer-learning-parameter-efficient)
+  - [Soft Prompts: How do we learn them and transfer them?](#soft-prompts-how-do-we-learn-them-and-transfer-them)
+  - [Visualizing the Problem](#visualizing-the-problem)
+  - [Current Approach- Dubbed MPT](#current-approach--dubbed-mpt)
+  - [Source Training](#source-training)
+      - [Losses](#losses)
+  - [Target Adaptation](#target-adaptation)
+    - [Baselines](#baselines)
+    - [Results and Discussion](#results-and-discussion)
+  - [Concluding remarks](#concluding-remarks)
 
 ## Idea Behind Compact Models
 We don't want to train the entire model (billions of parameters) for every new task(Model tuning). This brings us to the idea of having compact and extensible downstream models.  Compact models are those that solve many tasks using a small number of additional parameters per task. Extensible models can be trained incrementally to solve new tasks, without forgetting previous ones. This can be acheived via **Transfer learning** strategies like : 
@@ -129,7 +140,8 @@ To establish the importance of decomposition and distillation they carried out a
     <br>
     <em>Figure 3. Ablation results on prompt decomposition and distillation.</em>
 </p>
-### Concluding remarks
+
+## Concluding remarks
 In this blog, we discuss various parameter-efficient transfer learning techniques that can adapt to downstream target tasks. We saw the use of Task transferability, knowledge distillation, Prompt decomposition and what not. Everything, to squeeze out the performance of large models without taking a toll on the memory and the wallet. Soon, we will expect prompt learning on the fly, tackle new, unseen tasks and solve them without forgetting the old ones. The field of Continual learning is soon charging up to deal all of these issues. One of the biggies at the IBM, David Cox, head of Exploratory AI Research and co-director of the MIT-IBM Watson AI Lab says,
 >“Prompt-tuning allows you to have your cake and eat it, too!. You can adapt your model to specialized tasks faster and more sustainably, while making it easier to find and fix problems.”
 
