@@ -57,10 +57,10 @@ via. building a single prompt matrix
 ## Current Approach- Dubbed MPT
 In the previous approaches, soft prompts are individually learned per task using various approaches, particularly vanilla prompt tuning (see Vanilla prompt tuning). This phase of the process is called source training. In source training, we aggregate the prompts we learned from the set of source tasks. In the next phase, target adaptation, we adapt a prompt from the pool of aggregated pre-trained (on source tasks) prompts and initialize the prompt for further fine-tuning on a target task based on a (potentially learned) similarity measure.
 
-<p align= 'center'>
-    <img src="https://user-images.githubusercontent.com/39300414/226228137-f88ba00b-b1c2-4222-a6cf-399291cef7db.png" alt>
-    <em>
-	 Figure 2. An illustration on prompt decomposition for two tasks.</em>
+<p align="center">
+ <img src="https://user-images.githubusercontent.com/39300414/226228137-f88ba00b-b1c2-4222-a6cf-399291cef7db.png" alt="train_perf_fig"/>
+    <br>
+    <em>Figure 2. An illustration on prompt decomposition for two tasks.</em>
 </p>
 
 In the dubbed version of Multitask prompt tuning (MPT), we follow the same strategy of Source training and target adaptation with a slight twist. It seems that simply sharing the aggregated soft prompts in the Vanilla version did not fit the target task so well and resulted in a gap in the performance of the PLM w.r.t Source and Target tasks.
@@ -124,9 +124,11 @@ Yes, because they conduct a series of experiments to test whether prompt decompo
 + **Ablation w.r.t. decomposition and distillation**
 To establish the importance of decomposition and distillation they carried out an ablation study on SUPERGLUE, which demonstrates that the shared component can effectively capture the rich cross-task knowledge that is beneficial for target downstream tasks.
 
-<p align="center"><img src=https://user-images.githubusercontent.com/39300414/226212894-2212cb09-b18f-4f09-bcd8-3d91f868bc59.JPG></p>
-<p align="center">Figure 3. Ablation results on prompt decomposition and distillation.</p>
-
+<p align="center">
+ <img src="https://user-images.githubusercontent.com/39300414/226212894-2212cb09-b18f-4f09-bcd8-3d91f868bc59.JPG" alt="Ablation1"/>
+    <br>
+    <em>Figure 3. Ablation results on prompt decomposition and distillation.</em>
+</p>
 ### Concluding remarks
 In this blog, we discuss various parameter-efficient transfer learning techniques that can adapt to downstream target tasks. We saw the use of Task transferability, knowledge distillation, Prompt decomposition and what not. Everything, to squeeze out the performance of large models without taking a toll on the memory and the wallet. Soon, we will expect prompt learning on the fly, tackle new, unseen tasks and solve them without forgetting the old ones. The field of Continual learning is soon charging up to deal all of these issues. One of the biggies at the IBM, David Cox, head of Exploratory AI Research and co-director of the MIT-IBM Watson AI Lab says,
 >“Prompt-tuning allows you to have your cake and eat it, too!. You can adapt your model to specialized tasks faster and more sustainably, while making it easier to find and fix problems.”
